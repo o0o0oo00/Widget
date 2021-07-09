@@ -27,8 +27,7 @@ class ContributionView : View {
         (1..actualMaximum).toList()
     }
 
-    private val rect = RectF()
-    private val paint = Paint().apply {
+    private val paintBackground = Paint().apply {
         color = Color.GREEN
     }
     private val paintText = Paint().apply {
@@ -36,7 +35,13 @@ class ContributionView : View {
         textAlign = Paint.Align.CENTER
         textSize = 45F
     }
+    private val paintBorder = Paint().apply {
+        style = Paint.Style.STROKE
+        color = Color.RED
+        strokeWidth = 4F
+    }
 
+    private val rect = RectF()
     private var itemWidth = 0F
     private val itemMargin = 20
     private val round = 10F
@@ -48,12 +53,12 @@ class ContributionView : View {
 
     override fun onDraw(canvas: Canvas) {
         monthDays.forEachIndexed { index, i ->
-            rect.left = (index % 10) * (itemWidth + itemMargin)
-            rect.top = (index / 10) * (itemWidth + itemMargin)
+            rect.left = (index % 10) * (itemWidth + itemMargin) + itemMargin / 2
+            rect.top = (index / 10) * (itemWidth + itemMargin) + itemMargin / 2
             rect.right = rect.left + itemWidth
             rect.bottom = rect.top + itemWidth
-            log("index:$index rect:${rect}")
-            canvas.drawRoundRect(rect, round, round, paint)
+            canvas.drawRoundRect(rect, round, round, paintBackground)
+            canvas.drawRoundRect(rect, round, round, paintBorder)
             canvas.drawText(
                 index.toString(),
                 (rect.left + rect.right) / 2,
