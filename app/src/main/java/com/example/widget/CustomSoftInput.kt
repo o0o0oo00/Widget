@@ -1,10 +1,13 @@
 package com.example.widget
 
 import android.content.Context
+import android.content.Context.VIBRATOR_SERVICE
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
@@ -34,8 +37,13 @@ class CustomSoftInput : ViewGroup {
         }
     }
 
+    private val vb by lazy {
+        context.getSystemService(VIBRATOR_SERVICE) as? Vibrator
+    }
+
     private val onItemClickListener = View.OnClickListener {
         Log.e("onItemClickListener","${it.tag}")
+        vb?.vibrate(VibrationEffect.createOneShot(30,100))
     }
     init {
         (1..12).toList().forEach {
