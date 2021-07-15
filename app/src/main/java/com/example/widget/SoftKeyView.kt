@@ -1,12 +1,17 @@
 package com.example.widget
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AnimationSet
+import com.google.android.material.animation.AnimatorSetCompat
 
 /**
  * @author:         zhaochunyu
@@ -55,11 +60,30 @@ class SoftKeyView : View {
             bgPaint
         )
         canvas.drawText(
-            "1",
+            text,
             width / 2f,
             height / 2f + (textPaint.textSize - textPaint.descent()) / 2,
             textPaint
         )
 
+    }
+
+    private val animationX by lazy {
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(
+            ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.96f, 1f),
+            ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.96f, 1f)
+        )
+        animatorSet.duration = 100
+        animatorSet
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                animationX.start()
+            }
+        }
+        return super.onTouchEvent(event)
     }
 }

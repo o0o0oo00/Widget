@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -33,14 +34,20 @@ class CustomSoftInput : ViewGroup {
         }
     }
 
+    private val onItemClickListener = View.OnClickListener {
+        Log.e("onItemClickListener","${it.tag}")
+    }
     init {
         (1..12).toList().forEach {
-            addView(SoftKeyView(context).apply {
+            val apply = SoftKeyView(context).apply {
                 layoutParams = MarginLayoutParams(-2, -2).apply {
                     setMargins(marginHorizontal, marginVertical, marginHorizontal, marginVertical)
                 }
+                tag = it.toString()
                 setText(it.toString())
-            })
+                setOnClickListener(onItemClickListener)
+            }
+            addView(apply)
         }
     }
 
