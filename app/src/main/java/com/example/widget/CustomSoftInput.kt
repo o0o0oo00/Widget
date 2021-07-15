@@ -34,21 +34,29 @@ class CustomSoftInput : ViewGroup {
     }
 
     init {
-        (1 .. 12).toList().forEach {
-            addView(AppCompatTextView(context).apply {
-                text = it.toString()
-                setBackgroundColor(Color.BLUE)
-                gravity = Gravity.CENTER
+        (1..12).toList().forEach {
+            addView(SoftKeyView(context).apply {
+                layoutParams = MarginLayoutParams(-2, -2).apply {
+                    setMargins(marginHorizontal, marginVertical, marginHorizontal, marginVertical)
+                }
+                setText(it.toString())
             })
         }
     }
 
     private var childWidth = 0
     private var childHeight = 0
+    private var marginHorizontal = 10
+    private var marginVertical = 20
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        measureChildren(widthMeasureSpec, heightMeasureSpec)
         childWidth = measuredWidth / 4
         childHeight = childWidth / 2
+        val w = childHeight - marginHorizontal * 2
+        val ws = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY)
+        val hs = MeasureSpec.makeMeasureSpec(childHeight - marginVertical * 2, MeasureSpec.EXACTLY)
+        (0 until childCount).map { getChildAt(it) }.forEachIndexed { index, view ->
+            measureChild(view, ws, hs)
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
@@ -57,10 +65,10 @@ class CustomSoftInput : ViewGroup {
         var currentTop = t
         (0 until childCount).map { getChildAt(it) }.forEachIndexed { index, view ->
             view.layout(
-                currentLeft,
-                currentTop,
-                currentLeft + childWidth,
-                currentTop + childHeight
+                currentLeft + marginHorizontal,
+                currentTop + marginVertical,
+                currentLeft + childWidth - marginHorizontal,
+                currentTop + childHeight - marginVertical
             )
             currentTop = t + (index + 1) / 4 * childHeight
             currentLeft += childWidth
