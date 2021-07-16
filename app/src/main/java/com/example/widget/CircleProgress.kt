@@ -1,11 +1,14 @@
 package com.example.widget
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 /**
  * @author:         zhaochunyu
@@ -37,10 +40,25 @@ class CircleProgress : View {
         }
     }
 
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        progressWithAnimation(180f)
+    }
+
+    fun progressWithAnimation(progress: Float) {
+        val ofFloat = ObjectAnimator.ofFloat(this, "progress", 0f, progress)
+        ofFloat.duration = 600
+        ofFloat.interpolator = FastOutSlowInInterpolator()
+        ofFloat.start()
+    }
+
     private val margin = 20f
 
-    fun setProgress() {
+    private var progress = 90f
 
+    fun setProgress(progress: Float) {
+        this.progress = progress
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -51,7 +69,7 @@ class CircleProgress : View {
             width.toFloat() - margin,
             height.toFloat() - margin,
             -90f,
-            90f,
+            progress,
             false,
             bgPaint2
         )
